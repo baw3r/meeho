@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: [:show, :edit, :update, :destroy]
+  before_action :set_event, only: [:show, :edit, :update, :destroy, :register]
 
   # GET /events
   # GET /events.json
@@ -62,7 +62,18 @@ class EventsController < ApplicationController
   end
 
   def register
+    @users_of_event = @event.users
+  end
+
+  def register_user
+    @event = Event.find(params[:id])
+    email = params[:email]
+    user = User.where(email: email).take
+    unless user.nil?
+      @event.users << user
+    end
     
+    redirect_to register_to_event_path(@event)
   end
 
   private
